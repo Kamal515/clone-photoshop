@@ -1,0 +1,17 @@
+<resources>
+    <string name="app_name">CLone photo shop explorer</string>
+    <string name="textView">CLone photo shop explorer</string>
+    <string name="imageView">view</string>
+    <string name="name">Enter name</string>
+    <string name="password">enter password</string>
+    <string name="login">login</string>
+    <string name="enter_name">Enter name</string>
+    <string name="clone_photo_shop_explorer">CLone Photo Shop explorer</string>
+    <string name="todo">TODO</string>
+    <string name="enter_password">enter password</string>
+    <string name="Enter_name">enter name</string>
+    <string name="this_is_a_second_activity">This is a Second Activity</string>
+    <string name="permission">Permission</string>
+    <string name="not_null">Permission</string>
+
+</resources>
