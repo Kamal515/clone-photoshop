@@ -1,58 +1,100 @@
-package com.example.clonephotoshopexplorer;
 
+package com.example.myapplication;
+
+import android.Manifest;
 import android.content.Intent;
+import android.content.pm.PackageManager;
+import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
+import android.net.Uri;
 import android.os.Bundle;
+import android.provider.MediaStore;
 import android.view.View;
-import android.widget.Button;
-import android.widget.EditText;
+import android.widget.ImageView;
+import android.widget.Toast;
 
+import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.core.app.ActivityCompat;
+import androidx.core.content.ContextCompat;
+
+import java.io.InputStream;
 
 public class MainActivity extends AppCompatActivity {
-
-private EditText Name;
-private EditText Password;
-private Button Login;
-private int counter = 5;
-
-    public MainActivity(EditText editTextTextPersonName, EditText password, Button login) {
-        this.Name = editTextTextPersonName;
-        this.Password = password;
-        this.Login = login;
-    }
-
-
+private static final int REQUEST_CODE_STORAGE_PERMISSION = 1;
+private static final int REQUEST_CODE_SELECT_IMAGE = 2;
+private ImageView imageSelected;
     @Override
-protected void onCreate(Bundle savedInstanceState) {
+    protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
-         Name = findViewById(R.id.editTextTextPersonName);
-         Password = findViewById(R.id.editTextNumberPassword);
-        Login = findViewById(R.id.Button);
+        imageSelected = findViewById(R.id.selectedImage);
+        findViewById(R.id.buttonSelectedImage).setOnClickListener(new View.OnClickListener() {
 
-         Login.setOnClickListener(new View.OnClickListener() {
-             @Override
-             public void onClick(View view) {
-                 validate(Name.getText().toString(), Password.getText().toString());
-             }
-         });
+            public void onClick(View v){
 
+                if(ContextCompat.checkSelfPermission(getApplicationContext(), Manifest.permission.READ_EXTERNAL_STORAGE
+                ) != PackageManager.PERMISSION_GRANTED){
+                    ActivityCompat.requestPermissions(MainActivity.this, new String[]{Manifest.permission.READ_EXTERNAL_STORAGE},
+                            REQUEST_CODE_STORAGE_PERMISSION
+                            );
+
+                }else{
+
+                    selectImage();
+                }
+
+            }
+        });
+    }
+     private void selectImage(){
+        Intent intent = new Intent(Intent.ACTION_PICK, MediaStore.Images.Media.EXTERNAL_CONTENT_URI);
+        if(intent.resolveActivity(getPackageManager()) != null){
+            startActivityForResult(intent,REQUEST_CODE_SELECT_IMAGE);
+        }
 }
-private void validate(String userName,String userpassword){
 
-        if((userName.equals("Admin")) && (userpassword.equals("3139"))){
-            Intent intent  = new Intent(MainActivity.this, SecondActivity.class);
-            startActivity(intent);
+    @Override
+    public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions, @NonNull int[] grantResults) {
+        super.onRequestPermissionsResult(requestCode, permissions, grantResults);
+        if(requestCode == REQUEST_CODE_STORAGE_PERMISSION && grantResults.length>0) {
+                if(grantResults[0] == PackageManager.PERMISSION_GRANTED) {
 
-        } else{
-            counter--;
-            if(counter == 0){
+                setectImage();
+        } else {
+                Toast.makeText(this, "permission denied!",Toast.LENGTH_SHORT).show();
 
-                Login.setEnabled(false);
             }
 
 
         }
-}
+    }
 
+    private void setectImage() {
+    }
+
+    protected void onActivityResult(int requestCode , int resultCode, @Nullable Intent data) {
+
+
+        super.onActivityResult(requestCode, resultCode, data);
+        if(requestCode == REQUEST_CODE_SELECT_IMAGE && resultCode == RESULT_OK){
+            if (data != null) {
+             Uri selectedImageUri = data.getData();
+            if(selectedImageUri != null){
+                try{
+
+                    InputStream inputStream =  getContentResolver().openInputStream(selectedImageUri);
+                    Bitmap bitmap = BitmapFactory.decodeStream(inputStream);
+                    imageSelected.setImageBitmap(bitmap);
+                }catch (Exception exception){
+
+                    Toast.makeText(this,exception.getMessage(),Toast.LENGTH_SHORT).show();
+                }
+
+            }
+            }
+
+        }
+    }
 }
