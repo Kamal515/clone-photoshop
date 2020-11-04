@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <item name="Button" type="id" />
+    <item name="editTextNumberPassword" type="id" />
+    <item name="Button" type="id" />
+    <item name="Btw" type="id">btw</item>
+    <item name="Button" type="id" />
+    <item name="editTextTextPersonName" type="id" />
+    <item name="editTextTextPersonName" type="id" />
+    <item name="editTextTextPersonName" type="id" />
+</resources>
